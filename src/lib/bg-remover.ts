@@ -26,3 +26,25 @@ export const uploadImageFn = createServerFn({ method: 'POST' })
     if (error) throw new Error(error.message)
     // return fileName
   })
+
+export const getUploadedImagesFn = createServerFn().handler(async () => {
+  const supabase = getSupabaseServerClient()
+  const userId = await getUserId()
+  const { error, data } = await supabase.storage.from('images').list(userId)
+  if (error) throw new Error(error.message)
+  return data
+})
+
+export const getImageUrlFn = createServerFn()
+  .inputValidator(z.object({ name: z.string() }))
+  .handler(async ({ data }) => {
+    const supabase = getSupabaseServerClient()
+    const userId = await getUserId()
+    const fileName = data.name
+    const filePath = `${userId}/${fileName}`
+    const { error, data: result } = await supabase.storage
+      .from('images')
+      .createSignedUrl(filePath, 60 * 60)
+    if (error) throw new Error(error.message)
+    return result.signedUrl
+  })
