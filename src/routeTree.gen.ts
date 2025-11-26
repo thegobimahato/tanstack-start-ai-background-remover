@@ -9,12 +9,13 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthedRouteImport } from './routes/_authed'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthedProjectsRouteImport } from './routes/_authed/projects'
+import { Route as AppAuthedRouteImport } from './routes/_app/_authed'
+import { Route as AppAuthedProjectsRouteImport } from './routes/_app/_authed/projects'
 
-const AuthedRoute = AuthedRouteImport.update({
-  id: '/_authed',
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,46 +23,51 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedProjectsRoute = AuthedProjectsRouteImport.update({
+const AppAuthedRoute = AppAuthedRouteImport.update({
+  id: '/_authed',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAuthedProjectsRoute = AppAuthedProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
-  getParentRoute: () => AuthedRoute,
+  getParentRoute: () => AppAuthedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/projects': typeof AuthedProjectsRoute
+  '/projects': typeof AppAuthedProjectsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/projects': typeof AuthedProjectsRoute
+  '/projects': typeof AppAuthedProjectsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authed': typeof AuthedRouteWithChildren
-  '/_authed/projects': typeof AuthedProjectsRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/_authed': typeof AppAuthedRouteWithChildren
+  '/_app/_authed/projects': typeof AppAuthedProjectsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths: '/' | '/projects'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/projects'
-  id: '__root__' | '/' | '/_authed' | '/_authed/projects'
+  id: '__root__' | '/' | '/_app' | '/_app/_authed' | '/_app/_authed/projects'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthedRoute: typeof AuthedRouteWithChildren
+  AppRoute: typeof AppRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/_authed': {
-      id: '/_authed'
+    '/_app': {
+      id: '/_app'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof AuthedRouteImport
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -71,30 +77,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authed/projects': {
-      id: '/_authed/projects'
+    '/_app/_authed': {
+      id: '/_app/_authed'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppAuthedRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/_authed/projects': {
+      id: '/_app/_authed/projects'
       path: '/projects'
       fullPath: '/projects'
-      preLoaderRoute: typeof AuthedProjectsRouteImport
-      parentRoute: typeof AuthedRoute
+      preLoaderRoute: typeof AppAuthedProjectsRouteImport
+      parentRoute: typeof AppAuthedRoute
     }
   }
 }
 
-interface AuthedRouteChildren {
-  AuthedProjectsRoute: typeof AuthedProjectsRoute
+interface AppAuthedRouteChildren {
+  AppAuthedProjectsRoute: typeof AppAuthedProjectsRoute
 }
 
-const AuthedRouteChildren: AuthedRouteChildren = {
-  AuthedProjectsRoute: AuthedProjectsRoute,
+const AppAuthedRouteChildren: AppAuthedRouteChildren = {
+  AppAuthedProjectsRoute: AppAuthedProjectsRoute,
 }
 
-const AuthedRouteWithChildren =
-  AuthedRoute._addFileChildren(AuthedRouteChildren)
+const AppAuthedRouteWithChildren = AppAuthedRoute._addFileChildren(
+  AppAuthedRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppAuthedRoute: typeof AppAuthedRouteWithChildren
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAuthedRoute: AppAuthedRouteWithChildren,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthedRoute: AuthedRouteWithChildren,
+  AppRoute: AppRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

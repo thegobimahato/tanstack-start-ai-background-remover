@@ -52,7 +52,10 @@ export default function Hero() {
               >
                 Fast, reliable background removal for product photos, portraits
                 and marketing.
-                <br /> <span className='text-xl'>one click, professional quality.</span>
+                <br />{' '}
+                <span className="text-xl">
+                  one click, professional quality.
+                </span>
               </motion.p>
 
               <motion.div
