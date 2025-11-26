@@ -1,0 +1,26 @@
+{
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+  "importOrder": [
+    "^react$",
+    "^next/(.*)$",
+    "^next/font/(.*)$",
+    "^@?\\w",
+
+    "^@components/(.*)$",
+    "^@hooks/(.*)$",
+    "^@utils/(.*)$",
+    "^@store/(.*)$",
+    "^@styles/(.*)$",
+
+    "^[../]",
+    "^./",
+
+    "^.+\\.(?:svg|png|jpg|jpeg|gif)$"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "importOrderCaseInsensitive": true
+}

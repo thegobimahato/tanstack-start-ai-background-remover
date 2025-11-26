@@ -1,22 +1,23 @@
-import { LoginOrSignUp } from '@/components/LoginOrSignUp'
-import { getUserFn } from '@/lib/auth'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/_app/_authed')({
+import { LoginOrSignUp } from "@/components/LoginOrSignUp";
+import { getUserFn } from "@/lib/auth";
+
+export const Route = createFileRoute("/_app/_authed")({
   component: RouteComponent,
   beforeLoad: async () => {
     try {
-      const { user } = await getUserFn()
-      return { isLoggedIn: !!user.email }
+      const { user } = await getUserFn();
+      return { isLoggedIn: !!user.email };
     } catch (_) {
-      return { isLoggedIn: false }
+      return { isLoggedIn: false };
     }
   },
-})
+});
 
 function RouteComponent() {
-  const { isLoggedIn } = Route.useRouteContext()
-  if (!isLoggedIn) return <LoginOrSignUp />
+  const { isLoggedIn } = Route.useRouteContext();
+  if (!isLoggedIn) return <LoginOrSignUp />;
 
-  return <Outlet />
+  return <Outlet />;
 }

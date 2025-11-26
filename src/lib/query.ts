@@ -1,16 +1,38 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-import { getImageUrlFn, getUploadedImagesFn, uploadImageFn } from './bg-remover'
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-export const useUploadImage = () => useMutation({ mutationFn: uploadImageFn })
+import {
+  getImageUrlFn,
+  getImageWithouBackgroundName,
+  getUploadedImagesFn,
+  removeImageBackgroundFn,
+  uploadImageFn,
+} from "./bg-remover";
+
+export const useUploadImage = () =>
+  useMutation({
+    mutationFn: uploadImageFn,
+    onSuccess: (_, _1, _2, context) =>
+      context.client.invalidateQueries({ queryKey: ["uploads"] }),
+  });
+
+export const useRemoveImageBackground = () =>
+  useMutation({
+    mutationFn: removeImageBackgroundFn,
+    onSuccess: (_, _1, _2, context) =>
+      context.client.invalidateQueries({ queryKey: ["image-url"] }),
+  });
 
 export const useUploads = () =>
   useQuery({
-    queryKey: ['uploads'],
+    queryKey: ["uploads"],
     queryFn: getUploadedImagesFn,
-  })
+  });
 
 export const useImageUrl = (name: string) =>
   useQuery({
-    queryKey: ['image-url', name],
+    queryKey: ["image-url", name],
     queryFn: () => getImageUrlFn({ data: { name } }),
-  })
+  });
+
+export const useImageWithoutBgUrl = (name: string) =>
+  useImageUrl(getImageWithouBackgroundName(name));

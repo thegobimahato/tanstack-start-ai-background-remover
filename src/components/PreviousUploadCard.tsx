@@ -1,18 +1,19 @@
-import { useImageUrl } from '@/lib/query'
-import { Link } from '@tanstack/react-router'
+import { Link } from "@tanstack/react-router";
+
+import { useImageUrl } from "@/lib/query";
 
 type PreviousUploadCardProps = {
-  name: string
-}
+  name: string;
+};
 
 export const PreviousUploadCard = ({ name }: PreviousUploadCardProps) => {
-  const { data } = useImageUrl(name)
+  const { data } = useImageUrl(name);
   return (
     <Link to="/projects/$name" params={{ name }}>
-      <div className="rounded-lg overflow-clip border border-border shadow-lg opacity-90 hover:opacity-100 cursor-pointer hover:-translate-y-2 transition-all">
+      <div className="border-border cursor-pointer overflow-clip rounded-lg border opacity-90 shadow-lg transition-all hover:-translate-y-2 hover:opacity-100">
         <img src={data} className="aspect-square" />
-        <p className="text-sm p-2">{name}</p>
+        <p className="p-2 text-sm">{name}</p>
       </div>
     </Link>
-  )
-}
+  );
+};

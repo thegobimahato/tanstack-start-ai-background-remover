@@ -1,41 +1,41 @@
-'use client'
+"use client";
 
-import { Button } from '@/components/ui/button'
+import { useRouter } from "@tanstack/react-router";
+import { motion } from "motion/react";
+
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
-} from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { signUpFn } from '@/lib/auth'
-import { cn } from '@/lib/utils'
-import { useRouter } from '@tanstack/react-router'
-
-import { motion } from 'motion/react'
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { signUpFn } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 
 type SignUpFormProps = {
-  switchToLogIn: () => void
-}
+  switchToLogIn: () => void;
+};
 
 export function SignUpForm({ switchToLogIn }: SignUpFormProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   return (
-    <div className={cn('flex flex-col gap-6 max-w-xl mx-auto p-12')}>
+    <div className={cn("mx-auto flex max-w-xl flex-col gap-6 p-12")}>
       {/* whole-card animation */}
       <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 30, opacity: 0 }}
-        transition={{ duration: 1, ease: 'easeOut' }}
+        transition={{ duration: 1, ease: "easeOut" }}
       >
         <Card>
           <CardHeader>
@@ -48,15 +48,15 @@ export function SignUpForm({ switchToLogIn }: SignUpFormProps) {
           <CardContent>
             <form
               onSubmit={async (e) => {
-                e.preventDefault()
-                const formData = new FormData(e.target as HTMLFormElement)
+                e.preventDefault();
+                const formData = new FormData(e.target as HTMLFormElement);
                 await signUpFn({
                   data: {
-                    email: formData.get('email') as string,
-                    password: formData.get('password') as string,
+                    email: formData.get("email") as string,
+                    password: formData.get("password") as string,
                   },
-                })
-                router.invalidate()
+                });
+                router.invalidate();
               }}
             >
               <FieldGroup>
@@ -85,7 +85,7 @@ export function SignUpForm({ switchToLogIn }: SignUpFormProps) {
                   <Button type="submit">Sign Up</Button>
 
                   <FieldDescription className="text-center">
-                    Already have an account?{' '}
+                    Already have an account?{" "}
                     <button onClick={switchToLogIn} className="underline">
                       Log In
                     </button>
@@ -97,5 +97,5 @@ export function SignUpForm({ switchToLogIn }: SignUpFormProps) {
         </Card>
       </motion.div>
     </div>
-  )
+  );
 }
